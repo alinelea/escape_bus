@@ -1,18 +1,42 @@
+<div class="row">
+
 <h2>You are currently standing at...</h2>
-<p><%= @location.my_location %></p>
+  <p><%= @location.my_location %></p>
 
-<h1>The closest buses are...</h1>
+  <div id="map-canvas" style="height:300px;width:500px;margin:0;padding:0;"></div>
 
-<% if @nearby_buses.empty? %>
-  <p>...not really that close. Time to walk, bike, or uber.</p>
-<% end %>
+  <h2>The closest buses are...</h2>
+  <% if @nearby_buses.empty? %>
+    <p>...not really that close. Time to walk, bike, or uber.</p>
+  <% end %>
 
-<% @nearby_buses.each do |bus| %>
-  <p>
-    <strong>Route: </strong><%= bus["ROUTE"] %> <%= bus["DIRECTION"] %><br>
-    <strong>Bus Number: </strong> <%= bus["VEHICLE"] %><br>
-    <strong>Next Stop: </strong> <%= bus["TIMEPOINT"] %><br>
-  </p>
-<% end %>
+  <% @nearby_buses.each do |bus| %>
+    <p>
+      <strong>Route: </strong><%= bus["ROUTE"] %> <%= bus["DIRECTION"] %><br>
+      <strong>Bus Number: </strong> <%= bus["VEHICLE"] %><br>
+      <strong>Next Stop: </strong> <%= bus["TIMEPOINT"] %><br>
+    </p>
+  <% end %>
+</div>
 
-<%= link_to 'New Search', edit_location_path %>
+  <script type="text/javascript">
+     function initialize() {
+       var userLocation = new google.maps.LatLng(<%= @location.latitude %>, <%= @location.longitude %>);
+       var mapOptions = {
+         center: userLocation,
+         zoom: 15
+       };
+       var map = new google.maps.Map(document.getElementById('map-canvas'),
+           mapOptions);
+
+       var userMarker = new google.maps.Marker({
+         position: userLocation,
+         map: map,
+         animation: google.maps.Animation.DROP,
+         title: "You are here."
+       });
+     }
+     google.maps.event.addDomListener(window, 'load', initialize);
+   </script>
+
+<%= link_to 'New Search', edit_location_path, class: "btn btn-primary" %>
