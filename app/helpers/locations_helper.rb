@@ -12,7 +12,8 @@ module LocationsHelper
   #TODO: give users option of how close
 
   def is_nearby?(user_lat, user_long, bus_lat, bus_long)
-    (user_lat - bus_lat) <= 0.01 && (user_long - bus_long).abs <= 0.01
+    (user_lat - bus_lat).abs <= 0.01 &&
+    (user_long - bus_long).abs <= 0.01
   end
 
 end
